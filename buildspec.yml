@@ -1,0 +1,89 @@
+version: 0.2
+
+#env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+  #secrets-manager:
+     # key: secret-id:json-key:version-stage:version-id
+     # key: secret-id:json-key:version-stage:version-id
+  #exported-variables:
+     # - variable
+     # - variable
+  #git-credential-helper: yes
+#batch:
+  #fast-fail: true
+  #build-list:
+  #build-matrix:
+  #build-graph:
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+      nodejs: latest
+    commands:
+      - apt-get update
+      - npm install -g
+      - npm install -y jq
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+      - unzip ./sonar-scanner-cli-4.7.0.2747-linux.zip
+      - export PATH=$PATH:./sonar-scanner-4.7.0.2747-linux/bin
+      #- docker --version
+      - pip install awscli --upgrade
+      - export SONAR_SCANNER_VERSION=4.7.0.2747
+      - export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
+      - curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
+      - unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+      - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
+      - export SONAR_SCANNER_OPTS="-server"
+      #- aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 376782809023.dkr.ecr.ap-south-1.amazonaws.com
+      #- REPOSITORY_URI=376782809023.dkr.ecr.ap-south-1.amazonaws.com/qcat-aerospace-backend-ecr
+      # - command
+  pre_build:
+    commands:
+      #- dotnet tool install --global dotnet-sonarscanner
+     # - npm install -g sonarqube-scanner
+     # - dotnet sonarscanner begin /k:"QCat_Aerospace_Backend" /d:sonar.host.url="http://13.235.34.115:9000" /d:sonar.token="sqp_ad6f4841e65a731773528b2f6a26319e4bf7daa2"
+     # - dotnet build
+     # - dotnet sonarscanner end /d:sonar.token="sqp_ad6f4841e65a731773528b2f6a26319e4bf7daa2"
+     # - sleep 10
+     # - npm sonarscanner begin /k:"AEMReports" /d:sonar.host.url="http://13.235.34.115:9000" /d:sonar.token="sqp_8ec4befef8da34cc78f84c58617a22f8e35c6c41"
+    #  - sonar-scanner -Dsonar.projectKey=AEMReports -Dsonar.host.url=http://13.235.34.115:9000 -Dsonar.login=sqp_8ec4befef8da34cc78f84c58617a22f8e35c6c41
+      - npm install -g sonarqube-scanner
+   #   - sonarqube-scanner -Dsonar.login=sqp_8ec4befef8da34cc78f84c58617a22f8e35c6c41
+      - sleep 10
+    #  - curl -u admin:GBSonarAdmin123 http://13.235.34.115:9000/api/qualitygates/project_status?projectKey=AEMReports > result.json
+    #  - cat result.json
+      #- if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi 
+  build:
+    commands:
+      # - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 376782809023.dkr.ecr.ap-south-1.amazonaws.com
+      # - REPOSITORY_URI=376782809023.dkr.ecr.ap-south-1.amazonaws.com/qcat-aerospace-backend-ecr
+      # - Date_Tag=$(date '+%Y%m%d%H%M%S')
+      # - docker build -t $REPOSITORY_URI:$Date_Tag -f QcatAerospaceApi/Dockerfile .
+      # - docker push $REPOSITORY_URI:$Date_Tag
+  #post_build:
+    #commands:
+      #- docker push $REPOSITORY_URI:$Date_Tag
+      # - command
+#reports:
+  #report-name-or-arn:
+    #files:
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
+#artifacts:
+  #files:
+    # - location
+    # - location
+  #name: $(date +%Y-%m-%d)
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - paths
